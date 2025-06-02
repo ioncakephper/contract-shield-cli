@@ -4,10 +4,10 @@ const packageJson = require('../package.json');
 
 // Cleanup helper function
 const cleanupFiles = () => {
-  const filesToRemove = ['transpile.log', 'test-config.json'];
+  const filesToRemove = ['transpile.log', 'test-config.json', 'dist', 'test-output'];
   filesToRemove.forEach(file => {
     if (fs.existsSync(file)) {
-      fs.unlinkSync(file);
+      fs.rmSync(file, { recursive: true, force: true }); // Remove files & directories
     }
   });
 };
@@ -101,5 +101,26 @@ describe('Contract Shield CLI - Basic Transpile Tests', () => {
     const output2 = execSync('node src/cli.js transpile').toString();
     expect(output1).toBeDefined();
     expect(output2).toBeDefined();
+  });
+
+  // 🔹 New Tests for `--output` Option
+  test('Transpiled files are saved in the specified output directory', () => {
+    execSync('node src/cli.js transpile --output test-output');
+
+    expect(fs.existsSync('test-output')).toBe(true);
+  });
+
+  test('Transpiled files are saved to "dist" when no --output is provided', () => {
+    execSync('node src/cli.js transpile');
+
+    expect(fs.existsSync('dist')).toBe(true);
+  });
+
+  test('Fails gracefully when given an invalid output folder', () => {
+    try {
+      execSync('node src/cli.js transpile --output "/invalid-path"');
+    } catch (error) {
+      expect(error.stderr.toString()).toBeDefined();
+    }
   });
 });

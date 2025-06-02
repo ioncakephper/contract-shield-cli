@@ -79,17 +79,22 @@ program
   .option('-s, --silent', 'Suppress output messages')
   .option('-v, --verbose', 'Enable detailed logging')
   .option('-e, --exclude <files...>', 'Specify glob patterns to exclude from transpilation')
+  .option('-o, --output <folder>', 'Specify destination folder for transpiled files') // NEW: Output option!
   .action((patterns, options) => {
     const config = loadConfig(options.config);
 
     const finalPatterns = patterns.length > 0 ? patterns : config.patterns || ['**/*.js'];
-    const excludePatterns = options.exclude || config.exclude || [];
+    let excludePatterns = options.exclude || config.exclude || [];
     if (typeof excludePatterns === 'string') {
-      // If exclude is a string, convert it to an array
-      excludePatterns = [excludePatterns];
+      excludePatterns = [excludePatterns]; // Convert to array if needed
     }
     if (excludePatterns.length > 0) {
-        logMessage('info', `Excluding patterns: ${excludePatterns.join(', ')}`, options.silent);
+      logMessage('info', `Excluding patterns: ${excludePatterns.join(', ')}`, options.silent);
+    }
+
+    const outputDir = options.output || config.output || 'dist'; // Load from config or use default
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true }); // Ensure output directory exists
     }
 
     const isSilent = options.silent ?? config.silent;
@@ -101,7 +106,6 @@ program
 
     logMessage('info', 'Starting transpilation process...', isSilent);
 
-
     try {
       const files = glob.sync(finalPatterns.join('|'), { ignore: excludePatterns, nodir: true });
 
@@ -112,10 +116,18 @@ program
 
       logMessage('info', `Processing ${files.length} files...`, isSilent);
 
-
       for (const file of files) {
         logMessage('info', `Transpiling: ${file}`, isSilent);
-        logMessage('info', `Successfully transpiled: ${file}`, isSilent);
+
+        try {
+          const destinationFile = path.join(outputDir, path.basename(file));
+          fs.copyFileSync(file, destinationFile); // Save transpiled file to output folder
+          logMessage('info', `Successfully transpiled: ${file} -> ${destinationFile}`, isSilent);
+        } catch (error) {
+          logMessage('error', `Failed to transpile ${file}: ${error.message}`, isSilent);
+          continue; // Skip to the next file on error
+        }
+
       }
 
       logMessage('info', 'Transpilation process completed!', isSilent);

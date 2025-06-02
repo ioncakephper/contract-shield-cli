@@ -12,5 +12,6 @@
         "**/*.config.js",
         "__tests__/**",
         "**/*.test.js"
-    ]
+    ],
+    "output": "./dist"
 }

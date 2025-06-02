@@ -116,5 +116,11 @@ describe('Contract Shield CLI - Basic Transpile Tests', () => {
     expect(fs.existsSync('dist')).toBe(true);
   });
 
-
+  // test('Fails gracefully when given an invalid output folder', () => {
+  //   try {
+  //     execSync('node src/cli.js transpile --output "/invalid-path"');
+  //   } catch (error) {
+  //     expect(error.stderr.toString()).toBeDefined();
+  //   }
+  // });
 });

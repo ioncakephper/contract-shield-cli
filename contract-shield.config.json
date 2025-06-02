@@ -9,6 +9,8 @@
         "build/**",
         "test/**",
         "tests/**",
-        "**/*.config.js"
+        "**/*.config.js",
+        "__tests__/**",
+        "**/*.test.js"
     ]
 }

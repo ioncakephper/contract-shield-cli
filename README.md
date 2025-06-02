@@ -39,5 +39,5 @@ The tool will generate a modified version of the contract that enforces these co
 
 
 ## License
-This project is licensed under the MIT License. See LICENSE for details.
+This project is licensed under the MIT License. See [LICENSE](./LICENSE) for details.
 

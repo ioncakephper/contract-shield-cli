@@ -84,6 +84,13 @@ program
 
     const finalPatterns = patterns.length > 0 ? patterns : config.patterns || ['**/*.js'];
     const excludePatterns = options.exclude || config.exclude || [];
+    if (typeof excludePatterns === 'string') {
+      // If exclude is a string, convert it to an array
+      excludePatterns = [excludePatterns];
+    }
+    if (excludePatterns.length > 0) {
+        logMessage('info', `Excluding patterns: ${excludePatterns.join(', ')}`, options.silent);
+    }
 
     const isSilent = options.silent ?? config.silent;
     const isVerbose = options.verbose ?? config.verbose;
@@ -96,7 +103,7 @@ program
 
 
     try {
-      const files = glob.sync(finalPatterns.join('|'), { ignore: excludePatterns });
+      const files = glob.sync(finalPatterns.join('|'), { ignore: excludePatterns, nodir: true });
 
       if (files.length === 0) {
         logMessage('warn', 'No files matched for transpilation.', isSilent);
@@ -104,6 +111,7 @@ program
       }
 
       logMessage('info', `Processing ${files.length} files...`, isSilent);
+
 
       for (const file of files) {
         logMessage('info', `Transpiling: ${file}`, isSilent);

@@ -1,5 +1,14 @@
 {
     "patterns": [
-        "src/**/*.js"
+        "**/*.js"
+    ],
+    "exclude": [
+        "node_modules/**",
+        "dist/**",
+        "coverage/**",
+        "build/**",
+        "test/**",
+        "tests/**",
+        "**/*.config.js"
     ]
 }

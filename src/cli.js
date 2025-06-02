@@ -2,13 +2,18 @@
 
 const { Command } = require('commander');
 const colors = require('ansi-colors');
+const packageJson = require('../package.json'); // Load package.json
 
 const program = new Command();
 
+// Safely set description and version with defaults
+const packageDescription = packageJson.description || 'A CLI tool for contract validation using Design by Contract.';
+const packageVersion = packageJson.version || '0.0.1';
+
 program
   .name('contracts-shield-cli')
-  .description('A CLI tool for verifying preconditions, postconditions, and invariants in contracts.')
-  .version('1.0.0');
+  .description(packageDescription)
+  .version(packageVersion);
 
 program
   .command('transpile [patterns...]', { isDefault: true })

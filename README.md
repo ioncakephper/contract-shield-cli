@@ -1,6 +1,6 @@
-# contracts-shield-cli  
+# contract-shield-cli  
 
-A CLI tool that verifies preconditions, postconditions, and invariants in contracts without altering their original source code. `contracts-shield-cli` enforces Design by Contract principles externally, ensuring contracts behave as expected while preserving their integrity.  
+A CLI tool that verifies preconditions, postconditions, and invariants in contracts without altering their original source code. `contract-shield-cli` enforces Design by Contract principles externally, ensuring contracts behave as expected while preserving their integrity.  
 
 ## Features  
 - **Precondition Validation (`@pre`)** – Ensures input conditions are met before execution.  
@@ -9,10 +9,10 @@ A CLI tool that verifies preconditions, postconditions, and invariants in contra
 - **Source Code Integrity** – Works externally without modifying the original code.  
 
 ## Installation  
-To install `contracts-shield-cli`, use:  
+To install `contract-shield-cli`, use:  
 
 ```sh
-npm install -g contracts-shield-cli
+npm install -g contract-shield-cli
 ```
 
 ## Example

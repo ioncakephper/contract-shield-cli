@@ -30,7 +30,7 @@ program
  */
 function loadConfig(configPath) {
   const defaultProjectConfig = path.resolve(process.cwd(), 'contract-shield.config.json');
-  const defaultGlobalConfig = path.resolve(os.homedir(), 'contract-shield-cli.json');
+  const defaultGlobalConfig = path.resolve(os.homedir(), 'contract-shield.json');
 
   const finalConfigPath = configPath || (fs.existsSync(defaultProjectConfig) ? defaultProjectConfig : fs.existsSync(defaultGlobalConfig) ? defaultGlobalConfig : null);
 

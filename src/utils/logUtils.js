@@ -18,10 +18,18 @@ const logger = winston.createLogger({
       handleExceptions: true })]
 });
 
+const levelColors = {
+  error: colors.red,
+  warn: colors.yellow,
+  info: colors.green,
+  debug: colors.blue
+};
+
 const logMessage = (level, message, isSilent) => {
   logger.log({ level, message });
   if (!isSilent) {
-    console.log(colors.green(`[${level.toUpperCase()}]`), message);
+    const colorize = levelColors[level] || colors.white;
+    console.log(colorize(`[${level.toUpperCase()}]`), message);
   }
 };
 

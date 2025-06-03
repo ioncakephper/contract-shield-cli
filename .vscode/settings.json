@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
         "postconditions"
-    ]
+    ],
+    "codium.codeCompletion.enable": true
 }

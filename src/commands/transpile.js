@@ -4,6 +4,7 @@ const colors = require('ansi-colors');
 const fs = require('fs');
 const path = require('path');
 const glob = require('glob');
+const { log } = require('console');
 
 /**
  * Transpile files based on provided patterns and options.
@@ -22,10 +23,8 @@ function transpileCommand(patterns, options) {
       logMessage('info', `Excluding patterns: ${excludePatterns.join(', ')}`, options.silent);
     }
 
-    const outputDir = options.output || config.output || 'dist'; // Load from config or use default
-    if (!fs.existsSync(outputDir)) {
-      fs.mkdirSync(outputDir, { recursive: true }); // Ensure output directory exists
-    }
+    const path.dirname(destinationFile) = options.output || config.output || 'dist'; // Load from config or use default
+
 
     const isSilent = options.silent ?? config.silent;
     const isVerbose = options.verbose ?? config.verbose;
@@ -50,14 +49,19 @@ function transpileCommand(patterns, options) {
         logMessage('info', `Transpiling: ${file}`, isSilent);
 
         try {
-          const destinationFile = path.join(outputDir, path.basename(file));
+            logMessage('debug', `Source file dirname: ${path.dirname(file)}`, isSilent);
+          const destinationFile = path.join(path.dirname(destinationFile), path.dirname(file), path.basename(file));
+          logMessage('debug', `Destination file: ${destinationFile}`, isSilent);
+          logMessage('debug', `Destination file dirname: ${path.dirname(destinationFile)}`, isSilent);
+          if (!fs.existsSync(path.dirname(destinationFile))) {
+            fs.mkdirSync(path.dirname(destinationFile), { recursive: true }); // Ensure output directory exists
+          }
           fs.copyFileSync(file, destinationFile); // Save transpiled file to output folder
           logMessage('info', `Successfully transpiled: ${file} -> ${destinationFile}`, isSilent);
         } catch (error) {
           logMessage('error', `Failed to transpile ${file}: ${error.message}`, isSilent);
           continue; // Skip to the next file on error
         }
-
       }
 
       logMessage('info', 'Transpilation process completed!', isSilent);

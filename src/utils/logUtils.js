@@ -1,7 +1,7 @@
 const winston = require('winston');
 const colors = require('ansi-colors');
 
-const logFilePath = 'transpile.log';
+const logFilePath = process.env.LOG_FILE_PATH || 'transpile.log';
 
 const logger = winston.createLogger({
   level: 'info',

@@ -6,10 +6,20 @@ const path = require("path");
 const glob = require("glob");
 const { log } = require("console");
 
+
 /**
- * Transpile files based on provided patterns and options.
- * @param {string[]} patterns - Glob patterns for source files.
- * @param {Object} options - CLI options (`--output`, `--silent`, etc.).
+ * Transpiles files based on specified patterns and options.
+ *
+ * @param {string[]} patterns - Array of glob patterns to match files for transpilation.
+ * @param {Object} options - Options for the transpilation process.
+ * @param {string} [options.config] - Path to the configuration file.
+ * @param {string|string[]} [options.exclude] - Patterns to exclude from transpilation.
+ * @param {string} [options.output] - Directory to output transpiled files.
+ * @param {boolean} [options.silent] - If true, suppresses log output.
+ * @param {boolean} [options.verbose] - If true, enables verbose logging.
+ *
+ * @throws Will throw an error if an invalid log level is provided.
+ * @throws Will exit the process if an error occurs during file matching.
  */
 function transpileCommand(patterns, options) {
   if (!Array.isArray(patterns) || typeof options !== 'object') {

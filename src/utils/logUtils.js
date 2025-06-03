@@ -34,9 +34,24 @@ const levelColors = {
 
 const validLogLevels = ["error", "warn", "info", "debug"];
 
+/**
+ * Logs a message to the console with a specified log level.
+ *
+ * @param {string} level - The log level (e.g., 'info', 'error') to display.
+ * @param {string} message - The message to be logged.
+ */
 const writeToConsole = (level, message) => {
   console.log(colors.green(`[${level.toUpperCase()}]`), message);
 };
+
+/**
+ * Logs a message at a specified log level and optionally writes it to the console.
+ *
+ * @param {string} level - The log level for the message. Must be one of: "error", "warn", "info", "debug".
+ * @param {string} message - The message to be logged.
+ * @param {boolean} isSilent - If true, the message will not be written to the console.
+ * @throws {Error} Throws an error if the log level is invalid.
+ */
 const logMessage = (level, message, isSilent) => {
   if (!validLogLevels.includes(level)) {
     throw new Error(

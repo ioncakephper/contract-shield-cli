@@ -14,7 +14,7 @@ program.name(packageJson.name.replace(/-cli$/, ''))
 program
   .command('transpile [patterns...]', {isDefault: true})
   .alias('t')
-  .description('Transpile contracts and apply validation rules.')
+  .description('ranspile JavaScript files to add Design by Contract validation checks based on JSDoc annotations.')
   .option('-c, --config <file>', 'Specify a configuration file')
   .option('-s, --silent', 'Suppress output messages')
   .option('-v, --verbose', 'Enable detailed logging')

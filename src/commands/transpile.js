@@ -12,6 +12,10 @@ const { log } = require("console");
  * @param {Object} options - CLI options (`--output`, `--silent`, etc.).
  */
 function transpileCommand(patterns, options) {
+  if (!Array.isArray(patterns) || typeof options !== 'object') {
+    throw new Error("Invalid input: `patterns` should be an array and `options` should be an object.");
+  }
+  
   const config = loadConfig(options.config);
 
   const finalPatterns =

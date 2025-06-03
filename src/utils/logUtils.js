@@ -25,12 +25,13 @@ const levelColors = {
   debug: colors.blue
 };
 
+const validLogLevels = ['error', 'warn', 'info', 'debug'];
 const logMessage = (level, message, isSilent) => {
-  logger.log({ level, message });
-  if (!isSilent) {
-    const colorize = levelColors[level] || colors.white;
-    console.log(colorize(`[${level.toUpperCase()}]`), message);
+  if (!validLogLevels.includes(level)) {
+    throw new Error(`Invalid log level: ${level}. Must be one of: ${validLogLevels.join(', ')}`);
   }
-};
+  logger.log({ level, message });
+}
+
 
 module.exports = { logMessage };

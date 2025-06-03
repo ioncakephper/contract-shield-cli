@@ -23,7 +23,7 @@ function transpileCommand(patterns, options) {
       logMessage('info', `Excluding patterns: ${excludePatterns.join(', ')}`, options.silent);
     }
 
-    const path.dirname(destinationFile) = options.output || config.output || 'dist'; // Load from config or use default
+    const outDir = options.output || config.output || 'dist'; // Load from config or use default
 
 
     const isSilent = options.silent ?? config.silent;
@@ -50,8 +50,8 @@ function transpileCommand(patterns, options) {
 
         try {
             logMessage('debug', `Source file dirname: ${path.dirname(file)}`, isSilent);
-          const destinationFile = path.join(path.dirname(destinationFile), path.dirname(file), path.basename(file));
-          logMessage('debug', `Destination file: ${destinationFile}`, isSilent);
+            const destinationFile = path.join(outputDir, path.dirname(file), path.basename(file)); 
+            logMessage('debug', `Destination file: ${destinationFile}`, isSilent);
           logMessage('debug', `Destination file dirname: ${path.dirname(destinationFile)}`, isSilent);
           if (!fs.existsSync(path.dirname(destinationFile))) {
             fs.mkdirSync(path.dirname(destinationFile), { recursive: true }); // Ensure output directory exists

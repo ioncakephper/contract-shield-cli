@@ -1,0 +1,17 @@
+{
+    "patterns": [
+        "**/*.js"
+    ],
+    "exclude": [
+        "node_modules/**",
+        "dist/**",
+        "coverage/**",
+        "build/**",
+        "test/**",
+        "tests/**",
+        "**/*.config.js",
+        "__tests__/**",
+        "**/*.test.js"
+    ],
+    "output": "./dist"
+}

@@ -9,7 +9,13 @@ const logger = winston.createLogger({
     winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
     winston.format.printf(({ timestamp, level, message }) => `[${timestamp}] [${level.toUpperCase()}] ${message}`)
   ),
-  transports: [new winston.transports.File({ filename: logFilePath })]
+  transports: [new winston.transports.File({
+      filename: logFilePath,
+      maxsize: 5242880, // 5MB
+      maxFiles: 5,
+      tailable: true,
+      zippedArchive: true,
+      handleExceptions: true })]
 });
 
 const logMessage = (level, message, isSilent) => {

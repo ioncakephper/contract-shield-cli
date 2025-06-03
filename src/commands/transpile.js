@@ -15,25 +15,16 @@ function transpileCommand(patterns, options) {
   if (!Array.isArray(patterns) || typeof options !== 'object') {
     throw new Error("Invalid input: `patterns` should be an array and `options` should be an object.");
   }
-  
+
   const config = loadConfig(options.config);
-
-  const finalPatterns =
-    patterns.length > 0 ? patterns : config.patterns || ["**/*.js"];
-  let excludePatterns = options.exclude || config.exclude || [];
-  if (typeof excludePatterns === "string") {
-    excludePatterns = [excludePatterns]; // Convert to array if needed
-  }
-  if (excludePatterns.length > 0) {
-    logMessage(
-      "info",
-      `Excluding patterns: ${excludePatterns.join(", ")}`,
-      options.silent
-    );
+  const finalPatterns = patterns.length ? patterns : config.patterns || ["**/*.js"];
+  let excludePatterns = Array.isArray(options.exclude) ? options.exclude : [options.exclude || config.exclude || []].flat();
+  
+  if (excludePatterns.length) {
+    logMessage("info", `Excluding patterns: ${excludePatterns.join(", ")}`, options.silent);
   }
 
-  const outputDir = options.output || config.output || "dist"; // Load from config or use default
-
+  const outputDir = options.output || config.output || "dist";
   const isSilent = options.silent ?? config.silent;
   const isVerbose = options.verbose ?? config.verbose;
 
@@ -44,56 +35,29 @@ function transpileCommand(patterns, options) {
   logMessage("info", "Starting transpilation process...", isSilent);
 
   try {
-    const files = glob.sync(finalPatterns.join("|"), {
-      ignore: excludePatterns,
-      nodir: true,
-    });
+    const files = glob.sync(finalPatterns.join("|"), { ignore: excludePatterns, nodir: true });
 
-    if (files.length === 0) {
+    if (!files.length) {
       logMessage("warn", "No files matched for transpilation.", isSilent);
       return;
     }
 
     logMessage("info", `Processing ${files.length} files...`, isSilent);
 
-    for (const file of files) {
+    files.forEach(file => {
       logMessage("info", `Transpiling: ${file}`, isSilent);
 
       try {
-        logMessage(
-          "debug",
-          `Source file dirname: ${path.dirname(file)}`,
-          isSilent
-        );
-        const destinationFile = path.join(
-          outputDir,
-          path.dirname(file),
-          path.basename(file)
-        );
-        logMessage("debug", `Destination file: ${destinationFile}`, isSilent);
-        logMessage(
-          "debug",
-          `Destination file dirname: ${path.dirname(destinationFile)}`,
-          isSilent
-        );
+        const destinationFile = path.join(outputDir, path.dirname(file), path.basename(file));
         if (!fs.existsSync(path.dirname(destinationFile))) {
-          fs.mkdirSync(path.dirname(destinationFile), { recursive: true }); // Ensure output directory exists
+          fs.mkdirSync(path.dirname(destinationFile), { recursive: true });
         }
-        fs.copyFileSync(file, destinationFile); // Save transpiled file to output folder
-        logMessage(
-          "info",
-          `Successfully transpiled: ${file} -> ${destinationFile}`,
-          isSilent
-        );
+        fs.copyFileSync(file, destinationFile);
+        logMessage("info", `Successfully transpiled: ${file} -> ${destinationFile}`, isSilent);
       } catch (error) {
-        logMessage(
-          "error",
-          `Failed to transpile ${file}: ${error.message}`,
-          isSilent
-        );
-        continue; // Skip to the next file on error
+        logMessage("error", `Failed to transpile ${file}: ${error.message}`, isSilent);
       }
-    }
+    });
 
     logMessage("info", "Transpilation process completed!", isSilent);
   } catch (error) {

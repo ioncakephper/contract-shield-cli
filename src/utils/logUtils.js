@@ -24,6 +24,7 @@ const logger = winston.createLogger({
   ],
 });
 
+
 const levelColors = {
   error: colors.red,
   warn: colors.yellow,
@@ -32,6 +33,10 @@ const levelColors = {
 };
 
 const validLogLevels = ["error", "warn", "info", "debug"];
+
+const writeToConsole = (level, message) => {
+  console.log(colors.green(`[${level.toUpperCase()}]`), message);
+};
 const logMessage = (level, message, isSilent) => {
   if (!validLogLevels.includes(level)) {
     throw new Error(
@@ -41,6 +46,9 @@ const logMessage = (level, message, isSilent) => {
     );
   }
   logger.log({ level, message });
+  if (!isSilent) {
+    writeToConsole(level, message);
+  }
 };
 
 module.exports = { logMessage };

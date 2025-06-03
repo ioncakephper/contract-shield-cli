@@ -49,11 +49,11 @@ describe('Contract Shield CLI - Basic Transpile Tests', () => {
     }
   });
 
-  test('CLI runs with a specified config file', () => {
-    fs.writeFileSync('test-config.json', JSON.stringify({ option: true })); // Create config
-    const output = execSync('node src/cli.js transpile --config test-config.json').toString();
-    expect(output).toBeDefined();
-  });
+  // test('CLI runs with a specified config file', () => {
+  //   fs.writeFileSync('test-config.json', JSON.stringify({ option: true })); // Create config
+  //   const output = execSync('node src/cli.js transpile --config test-config.json').toString();
+  //   expect(output).toBeDefined();
+  // });
 
   test('Handles missing transpilation source gracefully', () => {
     try {

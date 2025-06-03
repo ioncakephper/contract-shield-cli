@@ -33,5 +33,4 @@ const logMessage = (level, message, isSilent) => {
   logger.log({ level, message });
 }
 
-
 module.exports = { logMessage };

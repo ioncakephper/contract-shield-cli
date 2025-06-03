@@ -4,8 +4,6 @@ const colors = require("ansi-colors");
 const fs = require("fs");
 const path = require("path");
 const glob = require("glob");
-const { log } = require("console");
-
 
 /**
  * Transpiles files based on specified patterns and options.
@@ -18,61 +16,98 @@ const { log } = require("console");
  * @param {boolean} [options.silent] - If true, suppresses log output.
  * @param {boolean} [options.verbose] - If true, enables verbose logging.
  *
- * @throws Will throw an error if an invalid log level is provided.
  * @throws Will exit the process if an error occurs during file matching.
  */
 function transpileCommand(patterns, options) {
-  if (!Array.isArray(patterns) || typeof options !== 'object') {
-    throw new Error("Invalid input: `patterns` should be an array and `options` should be an object.");
-  }
-
   const config = loadConfig(options.config);
-  const finalPatterns = patterns.length ? patterns : config.patterns || ["**/*.js"];
-  let excludePatterns = Array.isArray(options.exclude) ? options.exclude : [options.exclude || config.exclude || []].flat();
-  
-  if (excludePatterns.length) {
-    logMessage("info", `Excluding patterns: ${excludePatterns.join(", ")}`, options.silent);
+
+  const finalPatterns =
+    patterns.length > 0 ? patterns : config.patterns || ["**/*.js"];
+  let excludePatterns = options.exclude || config.exclude || [];
+  if (typeof excludePatterns === "string") {
+    excludePatterns = [excludePatterns]; // Convert to array if needed
   }
 
   const outputDir = options.output || config.output || "dist";
   const isSilent = options.silent ?? config.silent;
   const isVerbose = options.verbose ?? config.verbose;
 
-  if (isSilent && isVerbose) {
-    console.log(colors.gray(`Verbose logs will be saved to ${logFilePath}`));
-  }
-
   logMessage("info", "Starting transpilation process...", isSilent);
 
-  try {
-    const files = glob.sync(finalPatterns.join("|"), { ignore: excludePatterns, nodir: true });
+  if (!isSilent && isVerbose) {
+    logMessage("debug", `Using output directory: ${outputDir}`, false);
+  }
 
-    if (!files.length) {
+  try {
+    const files = glob.sync(finalPatterns.join("|"), {
+      ignore: excludePatterns,
+      nodir: true,
+    });
+
+    if (files.length === 0) {
       logMessage("warn", "No files matched for transpilation.", isSilent);
       return;
     }
 
     logMessage("info", `Processing ${files.length} files...`, isSilent);
 
-    files.forEach(file => {
+    if (!isSilent && isVerbose) {
+      logMessage("debug", `Matched files: ${files.join(", ")}`, false);
+    }
+
+    const failedFiles = [];
+
+    for (const file of files) {
       logMessage("info", `Transpiling: ${file}`, isSilent);
 
+      if (!isSilent && isVerbose) {
+        logMessage("debug", `Source directory: ${path.dirname(file)}`, false);
+      }
+
       try {
-        const destinationFile = path.join(outputDir, path.dirname(file), path.basename(file));
+        const destinationFile = path.join(
+          outputDir,
+          path.dirname(file),
+          path.basename(file)
+        );
+
         if (!fs.existsSync(path.dirname(destinationFile))) {
           fs.mkdirSync(path.dirname(destinationFile), { recursive: true });
         }
+
         fs.copyFileSync(file, destinationFile);
-        logMessage("info", `Successfully transpiled: ${file} -> ${destinationFile}`, isSilent);
+        logMessage(
+          "info",
+          `Successfully transpiled: ${file} -> ${destinationFile}`,
+          isSilent
+        );
       } catch (error) {
-        logMessage("error", `Failed to transpile ${file}: ${error.message}`, isSilent);
+        logMessage(
+          "error",
+          `Failed to transpile ${file}: ${error.message}`,
+          isSilent
+        );
+        failedFiles.push(file);
       }
-    });
+    }
 
     logMessage("info", "Transpilation process completed!", isSilent);
+
+    if (failedFiles.length > 0) {
+      logMessage(
+        "warn",
+        `Failed to transpile ${failedFiles.length} files: ${failedFiles.join(
+          ", "
+        )}`,
+        isSilent
+      );
+      process.exit(1); // Indicate partial success with some failures
+    } else {
+      process.exit(0); // Indicate full success
+    }
   } catch (error) {
-    logMessage("error", `Error matching files: ${error.message}`, isSilent);
-    process.exit(1);
+    logMessage("error", `Error matching files: ${error.message}`, false);
+    process.exit(2); // Indicate unrecoverable failure
   }
 }
 

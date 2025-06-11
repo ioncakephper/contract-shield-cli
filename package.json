@@ -10,6 +10,15 @@
     "test": "jest",
     "start": "node index.js"
   },
+  "keywords": {
+    "static-analysis",
+    "developer-tools",
+  "software-engineering",
+  "formal-methods",
+  "program-verification",
+  "automated-testing",
+  "debugging-tools"
+  },
   "author": {
     "name": "Ion Gireada",
     "url": "https://github.com/ioncakephper/contract-shield-cli"

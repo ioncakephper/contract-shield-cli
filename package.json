@@ -1,6 +1,6 @@
 {
   "name": "contract-shield-cli",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A CLI tool that verifies preconditions, postconditions, and invariants in contracts without altering their original source code. `contract-shield-cli` enforces Design by Contract principles externally, ensuring contracts behave as expected while preserving their integrity.",
   "main": "index.js",
   "bin": {
@@ -10,15 +10,15 @@
     "test": "jest",
     "start": "node index.js"
   },
-  "keywords": {
+  "keywords": [
     "static-analysis",
     "developer-tools",
-  "software-engineering",
-  "formal-methods",
-  "program-verification",
-  "automated-testing",
-  "debugging-tools"
-  },
+    "software-engineering",
+    "formal-methods",
+    "program-verification",
+    "automated-testing",
+    "debugging-tools"
+  ],
   "author": {
     "name": "Ion Gireada",
     "url": "https://github.com/ioncakephper/contract-shield-cli"

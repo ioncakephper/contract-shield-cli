@@ -17,7 +17,20 @@
     "formal-methods",
     "program-verification",
     "automated-testing",
-    "debugging-tools"
+    "debugging-tools",
+    "secure-coding",
+    "design-by-contract",
+    "runtime-verification",
+    "source-code-analysis",
+    "cli-tool",
+    "runtime-analysis",
+    "code-instrumentation",
+    "source-code-modification",
+    "programming-language-tools",
+    "contracts-validation",
+    "preconditions-postconditions",
+    "invariants-checking",
+    "verification-framework"
   ],
   "author": {
     "name": "Ion Gireada",
